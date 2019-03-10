@@ -42,29 +42,48 @@ namespace MaximTtop
 
         private void button1_Click(object sender, EventArgs e)
         {
+            button1.Enabled = false;
+            button2.Enabled = true;
+            button3.Enabled = true;
             //start
             if(chooseT == null || (chooseT != null && chooseT.isDone()))
             {
                 chooseT = new SortOnThread(ref listBox1, ref ev, false, choose);
 
                 radixT = new SortOnThread(ref listBox2, ref ev, true, radix);
+
+                listBox1.Items.Clear();
+                listBox2.Items.Clear();
             }
             ev.Set();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
+            button1.Enabled = true;
+            button2.Enabled = false;
+            button3.Enabled = true;
             //pause
             ev.Reset();
         }
-       
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            button3_Click(null, null);
+        }
 
         private void button3_Click(object sender, EventArgs e)
         {
+            button1.Enabled = true;
+            button2.Enabled = false;
+            button3.Enabled = false;
             //stop
             ev.Set();
-            radixT.kill();
-            chooseT.kill();
+            try
+            {
+                chooseT.kill();
+                radixT.kill();
+            } catch (Exception ex) { }
             radixT = null;
             chooseT = null;
             ev.Reset();
@@ -135,11 +154,10 @@ namespace MaximTtop
                 catch (Exception e) { }
                 //Thread.Sleep(100);
             }
-            //listBox1.Invoke((MethodInvoker)(() => {
-            //    listBox1.Items.Clear();
-            //    for (int j = 0; j < arr.Count; j++)
-            //        listBox1.Items.Add(arr[j]);
-            //}));
+            listBox1.Invoke((MethodInvoker)(() => {
+                listBox1.Items.Add("Готово");
+                listBox1.SelectedIndex = listBox1.Items.Count - 1;
+            }));
         }
 
         public int pow10(int x)
@@ -177,7 +195,7 @@ namespace MaximTtop
                 { 
                     
                     listBox1.Invoke((MethodInvoker)(() => {
-                        listBox1.Items.Add("Сортируем по " + i + " разряду");
+                        listBox1.Items.Add("Сортируем по " + (i + 1) + " разряду");
                         //listBox1.Items.Clear();
                         //for (int j = 0; j < arr.Count; j++)
                         //    listBox1.Items.Add(arr[j]);
@@ -185,11 +203,9 @@ namespace MaximTtop
                 } catch (Exception e) { }
             //Thread.Sleep(1000);
             }
-            //listBox1.Invoke((MethodInvoker)(() => {
-            //    listBox1.Items.Clear();
-            //    for (int j = 0; j < arr.Count; j++)
-            //        listBox1.Items.Add(arr[j]);
-            //}));
+            listBox1.Invoke((MethodInvoker)(() => {
+                listBox1.Items.Add("Готово");
+            }));
         }
     }
 }
